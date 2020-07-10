@@ -19,12 +19,13 @@ class Routes extends Component {
     this.getBooks();
   }
 
-  getBooks = () => {
-    BooksAPI
-      .getAll()
-      .then(books => this.setState({
-        books
-      }))
+  getBooks = async () => {
+    try {
+      const books = await BooksAPI.getAll();
+      this.setState({ books })
+    } catch (error) {
+      console.log(error, " error in getting all books");
+    }
   }
 
   handleShelfChange = () => {
@@ -32,7 +33,7 @@ class Routes extends Component {
   }
 
   render() {
-    const { books, loading } = this.state
+    const { books } = this.state
     return (
       <Router history={history}>
         <Switch>
@@ -42,7 +43,6 @@ class Routes extends Component {
             render={props => (
               <Home
                 books={books}
-                loading={loading}
                 handleShelfChange={this.handleShelfChange}
                 {...props}
               />
@@ -53,7 +53,6 @@ class Routes extends Component {
             render={props => (
               <Search
                 books={books}
-                loading={loading}
                 handleShelfChange={this.handleShelfChange}
                 {...props}
               />

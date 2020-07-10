@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
-import _ from 'lodash';
-import BooksList from './ListBooks';
-import { Link } from 'react-router-dom';
-import * as BooksAPI from '../BooksAPI';
+import React, { Component } from "react";
+import _ from "lodash";
+import ListBooks from "./ListBooks";
+import { Link } from "react-router-dom";
+import * as BooksAPI from "../BooksAPI";
 
 class Search extends Component {
   constructor(props) {
@@ -19,31 +19,32 @@ class Search extends Component {
     if (text) {
       this.searchBooks(text);
     }
-  }
+  };
 
   searchBooks = (text) => {
-    BooksAPI
-      .search(text)
-      .then(res => this.setState({
-        searchedBooks: (res && res.length > 0) ? res.filter(x => this.filterBooks(x)) : [],
-      }));
-  }
+    BooksAPI.search(text).then((res) =>
+      this.setState({
+        searchedBooks:
+          res && res.length > 0 ? res.filter((x) => this.filterBooks(x)) : [],
+      })
+    );
+  };
 
   filterBooks = (x) => {
-    if ((x.authors && x.imageLinks)) {
+    if (x.authors && x.imageLinks) {
       return this.markShelf(x);
     }
-  }
+  };
 
   markShelf = (x) => {
-    const { books } = this.props
-    const find = _.find(books, o => o.id === x.id);
+    const { books } = this.props;
+    const find = _.find(books, (o) => o.id === x.id);
     if (find) {
       x.shelf = find.shelf;
       return x;
     }
     return x;
-  }
+  };
 
   componentDidUpdate(prevProps) {
     const { text, searchedBooks } = this.state;
@@ -52,22 +53,19 @@ class Search extends Component {
       const { books: prevBooks } = prevProps;
       if (prevBooks !== books) {
         this.setState({
-          searchedBooks: searchedBooks.map(x => this.markShelf(x))
+          searchedBooks: searchedBooks.map((x) => this.markShelf(x)),
         });
       }
     }
   }
 
   render() {
-    const { handleChangeShelf } = this.props;
-    const { text, searchedBooks, loading } = this.state;
+    const { handleShelfChange } = this.props;
+    const { text, searchedBooks } = this.state;
     return (
       <div className="search-books">
         <div className="search-books-bar">
-          <Link
-            to='/'
-            className="close-search"
-          />
+          <Link to="/" className="close-search" />
           <div className="search-books-input-wrapper">
             <input
               type="text"
@@ -78,22 +76,16 @@ class Search extends Component {
           </div>
         </div>
         {text !== "" && (
-          loading ? (
-            <div className="search-books-results align-center">
-              Loading...
-            </div>
-          ) : (
-              <div className="search-books-results">
-                {searchedBooks.length > 0 ? (
-                  <BooksList
-                    books={searchedBooks}
-                    handleChangeShelf={handleChangeShelf}
-                  />
-                ) : (
-                    <p className="no-found">No search found of "{text}"</p>
-                  )}
-              </div>
-            )
+          <div className="search-books-results">
+            {searchedBooks.length > 0 ? (
+              <ListBooks
+                books={searchedBooks}
+                handleShelfChange={handleShelfChange}
+              />
+            ) : (
+              <p className="no-found">No search found of "{text}"</p>
+            )}
+          </div>
         )}
       </div>
     );

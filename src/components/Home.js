@@ -18,7 +18,7 @@ const shelves = [
 ];
 
 const Home = props => {
-  const { books, loading, handleChangeShelf } = props;
+  const { books, handleShelfChange } = props;
   return (
     <div className="list-books">
       <div className="list-books-title">
@@ -29,9 +29,8 @@ const Home = props => {
           {shelves.map(shelf => (
             <BookShelf
               key={shelf.key}
-              loading={loading}
               title={shelf.title}
-              handleChangeShelf={handleChangeShelf}
+              handleShelfChange={handleShelfChange}
               books={books.filter(v => v.shelf === shelf.key)}
             />
           ))}
@@ -41,8 +40,9 @@ const Home = props => {
         <Link
           to='/search'
           className="open-search"
-        />
-        search
+        >
+        <button type="button" className="open-search">Search</button>
+        </Link>
       </div>
     </div>
   );

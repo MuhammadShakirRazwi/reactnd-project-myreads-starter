@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import * as BooksAPI from '../BooksAPI';
 
 const joinArr = (arr = []) => {
- console.log(arr, " array")
  return arr.join(', ').replace(/,(?!.*,)/gmi, ' and');
 }
 
@@ -11,6 +10,7 @@ class Book extends Component {
   handleChange = ({ target }) => {
     const { book, handleShelfChange } = this.props;
     const shelf = target.value;
+    console.log(handleShelfChange, " func")
     BooksAPI
       .update(book, shelf)
       .then(() => handleShelfChange && handleShelfChange());
@@ -19,7 +19,6 @@ class Book extends Component {
   render() {
     const { book } = this.props;
     const { title, authors, shelf = "none", imageLinks } = book;
-    console.log(book, " book");
     return (
       <div className="book">
         <div className="book-top">
